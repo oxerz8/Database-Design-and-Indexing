@@ -1,0 +1,18 @@
+4. B-tree indices are known for their speed and efficiency in range based searches. Hence, for the query,
+explain analyze select * from employee where salary > 7300 and salary < 9600;
+the optimal index is idx_emp_salary (the b-tree index).
+
+Hash indices are known for their speed and efficiency in equality searches. Hence, for the query,
+explain analyze select * from employee where age=42;
+the optimal index is idx_emp_age (the hash index).
+
+6. As in part 4, we apply an equality condition to WHERE clause in the DELETE statement in order to see the efficiency of hash index. 
+EXPLAIN ANALYZE DELETE FROM employee where age=65;                                
+And we apply a range based condition to observe the efficiency of b-tree index.
+EXPLAIN ANALYZE DELETE FROM employee where salary<8000 and salary > 7600;                                
+
+These only work for their own columns.
+If we used a hash index in salary, there would be far too many buckets due to a large range.
+This can be observed in the images(with the count query). There are only 46 different ages whereas there are over 6000 different salary buckets.
+Hence, a b-tree would be more efficient in this case.
+And if we were to apply a range condition on the age column, it's not that it would not be efficient, but relatively speaking, as shown in the pictures, we can find that hash based selection would group age more efficiently and hence deletion would be faster.
